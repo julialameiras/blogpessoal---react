@@ -92,7 +92,6 @@ function FormularioPostagem() {
 
   async function gerarNovaPostagem(e: ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
-
     console.log({ postagem });
 
     if (id != undefined) {
@@ -123,7 +122,7 @@ function FormularioPostagem() {
 
         alert('Postagem cadastrada com sucesso');
         retornar();
-        
+
       } catch (error: any) {
         if (error.toString().includes('403')) {
           alert('O token expirou, favor logar novamente')
