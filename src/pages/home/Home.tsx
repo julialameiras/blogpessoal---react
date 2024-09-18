@@ -1,11 +1,5 @@
-//comando que gera esse códigozinho: rfce
-//essa importacao \/ pode ser apagada pois caiu em desuso
-//import React from 'react'
-
 import ListaPostagens from '../../components/postagens/listaPostagens/ListaPostagens';
 import ModalPostagem from '../../components/postagens/modalPostagens/ModalPostagens';
-
-
 
 function Home() {
     return (
@@ -23,8 +17,7 @@ function Home() {
             </div>
   
             <div className="flex justify-center ">
-              <img src="https://i.imgur.com/VpwApCU.png" alt="Imagem da Página Home" className='w-2/3' />
-      
+              <img src="https://i.imgur.com/VpwApCU.png" alt="Imagem da Página Home" className='w-2/3' />     
             </div>
           </div>
         </div>

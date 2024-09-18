@@ -1,22 +1,21 @@
 import { createContext, ReactNode, useState } from "react"
 import UsuarioLogin from "../models/UsuarioLogin"
 import { login } from "../services/Service"
+import { toastAlerta } from "../utils/toastAlerta"
 
-interface AuthContextProps{
+interface AuthContextProps {
     usuario: UsuarioLogin
-    handleLogin(usuario: UsuarioLogin): Promise<void>
     handleLogout(): void
+    handleLogin(usuario: UsuarioLogin): Promise<void>
     isLoading: boolean
 }
 
-interface AuthProviderProps{
+interface AuthProviderProps {
     children: ReactNode
 }
 
-//cria uma nova instancia da API context
 export const AuthContext = createContext({} as AuthContextProps)
 
-//cria o provedor
 export function AuthProvider({ children }: AuthProviderProps) {
 
     const [usuario, setUsuario] = useState<UsuarioLogin>({
@@ -26,43 +25,38 @@ export function AuthProvider({ children }: AuthProviderProps) {
         senha: "",
         foto: "",
         token: ""
-})
+    })
 
-const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false)
 
-async function handleLogin(usuarioLogin: UsuarioLogin) {
+    async function handleLogin(userLogin: UsuarioLogin) {
+        setIsLoading(true)
+        try {
+            await login(`/usuarios/logar`, userLogin, setUsuario)
+            toastAlerta('Você precisa estar logado', 'info');
+            setIsLoading(false)
 
-    setIsLoading(true);
-
-    try{
-
-        await login(`/usuarios/logar`, usuarioLogin, setUsuario);
-        alert("Usuário autenticado com sucesso!")
-
-    }catch(error){
-        alert("Os dados do usuário estão inconsistentes!")
+        } catch (error) {
+            console.log(error)
+            toastAlerta('Você precisa estar logado', 'info');
+            setIsLoading(false)
+        }
     }
 
-    setIsLoading(false);
-}
+    function handleLogout() {
+        setUsuario({
+            id: 0,
+            nome: "",
+            usuario: "",
+            senha: "",
+            foto: "",
+            token: ""
+        })
+    }
 
-function handleLogout(){
-    setUsuario({
-        id: 0,
-        nome: "",
-        usuario: "",
-        senha: "",
-        foto: "",
-        token: ""
-    })
+    return (
+        <AuthContext.Provider value={{ usuario, handleLogin, handleLogout, isLoading }}>
+            {children}
+        </AuthContext.Provider>
+    )
 }
-
-  return (
-//renderizando a context na aplicaçao react
-    <AuthContext.Provider value={{ usuario, handleLogin, handleLogout, isLoading}}>
-        {children}
-    </AuthContext.Provider>
-  )
-}
-
-export default AuthContext
